@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ünlüler Kitaplığı · Gece Kütüphanesi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root, body.dark{
+  --bg:#080b14;
+  --bg-2:#0c1121;
+  --surface:#111726;
+  --surface-2:#172037;
+  --surface-3:#1f2a47;
+  --border:#253354;
+  --border-soft:#1b2645;
+  --text:#e8edff;
+  --text-dim:#aab3d4;
+  --text-muted:#6b7699;
+  --accent:#5eb8ff;
+  --accent-soft:#8ed0ff;
+  --accent-deep:#2a6fb8;
+  --gold:#d4a574;
+  --fire:#ff8c42;
+  --fire-2:#ffb36b;
+  --danger:#ff6b6b;
+  --success:#5fdb8b;
+  --bronze:#b97a47;
+  --silver:#c9d0dc;
+  --gold-rank:#e7b867;
+  --diamond:#9cdcf2;
+  --empty-glyph:#445;
+  --topbar-grad-1:rgba(15,20,38,.8);
+  --topbar-grad-2:rgba(8,11,20,.4);
+  --backdrop:rgba(4,6,14,.7);
+  --shadow:0 10px 30px -10px rgba(0,0,0,.6);
+  --glow:0 0 24px rgba(94,184,255,.25);
+}
+body.light{
+  --bg:#f4ede0;
+  --bg-2:#eae2cf;
+  --surface:#ffffff;
+  --surface-2:#faf5e9;
+  --surface-3:#f1ebd9;
+  --border:#d5cdb6;
+  --border-soft:#e5ddc6;
+  --text:#1e2235;
+  --text-dim:#4a526b;
+  --text-muted:#7c8299;
+  --accent:#2a6fb8;
+  --accent-soft:#4a8ed0;
+  --accent-deep:#1b5291;
+  --gold:#b8863d;
+  --fire:#d85f1e;
+  --fire-2:#e8853a;
+  --danger:#b83a3a;
+  --success:#3ca366;
+  --bronze:#9c5f2e;
+  --silver:#7a8193;
+  --gold-rank:#b8863d;
+  --diamond:#3e8ead;
+  --empty-glyph:#c8c0a8;
+  --topbar-grad-1:rgba(255,252,242,.85);
+  --topbar-grad-2:rgba(244,237,224,.5);
+  --backdrop:rgba(60,50,30,.35);
+  --shadow:0 8px 24px -10px rgba(50,40,20,.25);
+  --glow:0 0 18px rgba(42,111,184,.12);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Manrope',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:14px;
+  letter-spacing:.01em;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+/* Yıldızlı arka plan (sadece koyu tema) */
+body.dark::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,.4),transparent 50%),
+    radial-gradient(1px 1px at 70% 80%,rgba(255,255,255,.3),transparent 50%),
+    radial-gradient(1px 1px at 40% 60%,rgba(255,255,255,.35),transparent 50%),
+    radial-gradient(1px 1px at 85% 20%,rgba(255,255,255,.25),transparent 50%),
+    radial-gradient(1.5px 1.5px at 10% 70%,rgba(142,208,255,.4),transparent 50%),
+    radial-gradient(1px 1px at 55% 15%,rgba(255,255,255,.3),transparent 50%),
+    radial-gradient(1px 1px at 90% 55%,rgba(255,255,255,.35),transparent 50%),
+    radial-gradient(1200px 600px at 80% -10%,rgba(94,184,255,.06),transparent 60%),
+    radial-gradient(800px 500px at -10% 110%,rgba(42,111,184,.08),transparent 60%);
+}
+/* Açık tema için yumuşak kağıt dokusu */
+body.light::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(1000px 500px at 85% -10%,rgba(42,111,184,.06),transparent 60%),
+    radial-gradient(800px 500px at -10% 110%,rgba(184,134,61,.05),transparent 60%);
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.03;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+body.light::after{opacity:.04;filter:invert(1)}
+
+.app{position:relative;z-index:1;display:grid;grid-template-columns:380px 1fr;height:100vh;width:100vw}
+
+/* SIDEBAR */
+.sidebar{
+  background:linear-gradient(180deg,var(--bg-2) 0%,var(--bg) 100%);
+  border-right:1px solid var(--border-soft);
+  display:flex;flex-direction:column;
+  height:100vh;overflow:hidden;
+}
+.brand{
+  padding:20px 22px 16px;border-bottom:1px solid var(--border-soft);
+  display:flex;align-items:center;gap:12px;
+}
+.brand-mark{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,#2a6fb8,#5eb8ff);
+  display:grid;place-items:center;
+  box-shadow:0 0 18px rgba(94,184,255,.35),inset 0 1px 0 rgba(255,255,255,.2);
+  font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:#fff;
+}
+.brand-title{font-family:'Cormorant Garamond',serif;font-size:20px;line-height:1.1;letter-spacing:.5px}
+.brand-sub{font-size:10.5px;color:var(--text-muted);letter-spacing:.2em;text-transform:uppercase;margin-top:2px}
+
+.sidebar-scroll{overflow-y:auto;padding:18px 22px 22px;flex:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.sidebar-scroll::-webkit-scrollbar{width:6px}
+.sidebar-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* Profil Kartı */
+.profile-card{
+  position:relative;padding:16px;border-radius:14px;
+  background:linear-gradient(145deg,var(--surface-2),var(--surface));
+  border:1px solid var(--border);cursor:pointer;overflow:hidden;
+  transition:transform .25s,border-color .25s;
+}
+.profile-card:hover{transform:translateY(-2px);border-color:var(--accent-deep)}
+.profile-card::before{
+  content:"";position:absolute;inset:-1px;border-radius:14px;padding:1px;
+  background:linear-gradient(135deg,transparent 30%,var(--rank-color,#5eb8ff) 50%,transparent 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;opacity:.5;pointer-events:none;
+}
+.rank-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.rank-medal{
+  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.3),transparent 60%),var(--rank-color,#5eb8ff);
+  color:#0b1020;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;
+  box-shadow:0 0 20px var(--rank-color,#5eb8ff),inset 0 -2px 4px rgba(0,0,0,.3);
+  flex-shrink:0;
+}
+.rank-info{flex:1;min-width:0}
+.rank-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;line-height:1.1}
+.rank-sub{font-size:11px;color:var(--text-muted);margin-top:2px;letter-spacing:.05em}
+.progress-wrap{position:relative;height:6px;background:var(--bg-2);border-radius:3px;overflow:hidden;border:1px solid var(--border-soft)}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--rank-color,#5eb8ff),var(--accent-soft));border-radius:3px;transition:width .6s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 12px var(--rank-color,#5eb8ff)}
+.progress-labels{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);margin-top:6px}
+.log-hint{margin-top:10px;font-size:10.5px;color:var(--text-muted);text-align:center;letter-spacing:.08em;text-transform:uppercase}
+
+/* Form */
+.form-section{margin-top:20px}
+/* Desktop'ta form her zaman açık */
+@media (min-width:961px){
+  .form-section.collapsed{display:block !important}
+  .mobile-form-toggle{display:none !important}
+}
+.section-title{
+  font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+}
+.section-title::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;color:var(--text-muted);margin-bottom:4px;letter-spacing:.04em}
+.field input,.field select,.field textarea{
+  width:100%;padding:9px 11px;background:var(--surface);color:var(--text);
+  border:1px solid var(--border);border-radius:8px;font:inherit;font-size:13px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(94,184,255,.12);
+}
+.field textarea{resize:vertical;min-height:58px;font-family:inherit}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row-3{display:grid;grid-template-columns:1fr 80px;gap:8px}
+
+.photo-uploads{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.photo-slot{
+  aspect-ratio:3/4;border:1.5px dashed var(--border);border-radius:10px;
+  background:var(--surface);position:relative;overflow:hidden;cursor:pointer;
+  display:grid;place-items:center;transition:border-color .2s,background .2s;
+}
+.photo-slot:hover{border-color:var(--accent);background:var(--surface-2)}
+.photo-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photo-slot .ph-label{position:relative;z-index:2;text-align:center;font-size:11px;color:var(--text-muted);padding:0 6px}
+.photo-slot.has-image .ph-label{position:absolute;bottom:4px;left:4px;right:4px;background:rgba(8,11,20,.75);padding:3px 6px;border-radius:4px;color:var(--text);font-size:10px;backdrop-filter:blur(4px)}
+.photo-slot input[type=file]{display:none}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:10px 14px;border-radius:9px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--text);font:inherit;font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .2s;letter-spacing:.01em;
+}
+.btn:hover{background:var(--surface-3);border-color:var(--accent-deep)}
+.btn-primary{background:linear-gradient(135deg,var(--accent-deep),var(--accent));border-color:var(--accent);color:#fff;font-weight:600;box-shadow:0 4px 14px rgba(94,184,255,.3)}
+.btn-primary:hover{box-shadow:0 6px 20px rgba(94,184,255,.4);transform:translateY(-1px)}
+.btn-ghost{background:transparent}
+.btn-danger{border-color:#5a2830;color:#ff9090;background:transparent}
+.btn-danger:hover{background:#2a1014;border-color:var(--danger)}
+.btn-block{width:100%}
+.btn-sm{padding:7px 10px;font-size:12px}
+
+.data-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+
+/* MAIN */
+.main{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{
+  height:64px;padding:0 28px;display:flex;align-items:center;gap:16px;
+  border-bottom:1px solid var(--border-soft);
+  background:linear-gradient(180deg,var(--topbar-grad-1),var(--topbar-grad-2));
+  backdrop-filter:blur(10px);
+}
+.tabs{display:flex;gap:4px;background:var(--surface);padding:4px;border-radius:10px;border:1px solid var(--border-soft)}
+.tab{
+  padding:8px 16px;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;
+  color:var(--text-dim);transition:all .2s;background:transparent;border:none;font-family:inherit;
+  letter-spacing:.01em;
+}
+.tab:hover{color:var(--text)}
+.tab.active{background:linear-gradient(135deg,var(--accent-deep),var(--accent));color:#fff;box-shadow:0 2px 8px rgba(94,184,255,.3)}
+
+.search-wrap{flex:1;max-width:420px;position:relative}
+.search-wrap input{
+  width:100%;padding:9px 12px 9px 36px;background:var(--surface);border:1px solid var(--border-soft);
+  color:var(--text);border-radius:9px;font:inherit;font-size:13px;
+}
+.search-wrap input:focus{outline:none;border-color:var(--accent)}
+.search-wrap::before{
+  content:"";position:absolute;left:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%236b7699' stroke-width='2' viewBox='0 0 24 24'><circle cx='11' cy='11' r='7'/><path d='m21 21-4.3-4.3'/></svg>") center/contain no-repeat;
+}
+
+.spacer{flex:1}
+
+/* Streak */
+.streak{
+  display:flex;align-items:center;gap:8px;padding:8px 14px 8px 12px;
+  border-radius:20px;background:linear-gradient(135deg,rgba(255,140,66,.15),rgba(255,179,107,.08));
+  border:1px solid rgba(255,140,66,.35);cursor:default;position:relative;
+  transition:all .3s;
+}
+.streak.level-1{box-shadow:0 0 12px rgba(255,140,66,.2)}
+.streak.level-2{box-shadow:0 0 18px rgba(255,140,66,.35)}
+.streak.level-3{box-shadow:0 0 28px rgba(255,140,66,.5);transform:scale(1.05)}
+.streak.level-4{box-shadow:0 0 40px rgba(255,140,66,.7),0 0 60px rgba(255,140,66,.3);transform:scale(1.12)}
+.streak-icon{font-size:18px;filter:drop-shadow(0 0 6px rgba(255,140,66,.7));animation:flicker 2s infinite alternate ease-in-out}
+.streak.level-2 .streak-icon{font-size:20px}
+.streak.level-3 .streak-icon{font-size:22px}
+.streak.level-4 .streak-icon{font-size:26px}
+.streak-count{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:18px;line-height:1;color:#ffb36b;text-shadow:0 0 8px rgba(255,140,66,.5)}
+.streak-label{font-size:10px;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase;line-height:1;margin-top:2px}
+@keyframes flicker{0%{transform:rotate(-3deg) scale(1)}100%{transform:rotate(3deg) scale(1.08)}}
+
+/* Content */
+.content{flex:1;overflow:hidden;position:relative}
+.view{display:none;height:100%;overflow-y:auto;padding:24px 28px 40px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.view::-webkit-scrollbar{width:8px}
+.view::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.view.active{display:block}
+
+/* Library view */
+.view-header{display:flex;align-items:baseline;gap:16px;margin-bottom:20px}
+.view-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:500;letter-spacing:.5px}
+.view-meta{color:var(--text-muted);font-size:13px;font-family:'JetBrains Mono',monospace}
+
+.filter-chips{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+
+/* Keşif butonları */
+.discover-actions{display:flex;gap:8px;margin-left:auto}
+.btn-discover{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:22px;
+  font:inherit;font-size:13px;font-weight:600;cursor:pointer;
+  border:1px solid transparent;transition:all .25s;letter-spacing:.01em;
+  font-family:inherit;
+}
+.btn-discover.daily{
+  background:linear-gradient(135deg,rgba(212,165,116,.18),rgba(231,184,103,.1));
+  border-color:rgba(231,184,103,.4);color:#e7b867;
+  box-shadow:0 0 14px rgba(231,184,103,.15);
+}
+.btn-discover.daily:hover{
+  background:linear-gradient(135deg,rgba(212,165,116,.28),rgba(231,184,103,.18));
+  box-shadow:0 0 22px rgba(231,184,103,.35);transform:translateY(-1px);
+}
+.btn-discover.random{
+  background:linear-gradient(135deg,rgba(94,184,255,.18),rgba(42,111,184,.1));
+  border-color:rgba(94,184,255,.4);color:var(--accent);
+  box-shadow:0 0 14px rgba(94,184,255,.15);
+}
+.btn-discover.random:hover{
+  background:linear-gradient(135deg,rgba(94,184,255,.28),rgba(42,111,184,.18));
+  box-shadow:0 0 22px rgba(94,184,255,.35);transform:translateY(-1px);
+}
+body.light .btn-discover.daily{color:#a67227}
+body.light .btn-discover.random{color:#1b5291}
+.btn-discover .bd-icon{font-size:15px;filter:drop-shadow(0 0 4px currentColor)}
+
+/* Detay banner'ı (Günün Kişisi / Rastgele) */
+.detail-banner{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;
+  margin-bottom:16px;font-size:12.5px;letter-spacing:.05em;
+}
+.detail-banner.daily{
+  background:linear-gradient(135deg,rgba(212,165,116,.14),rgba(231,184,103,.06));
+  border:1px solid rgba(231,184,103,.35);color:#e7b867;
+}
+.detail-banner.random{
+  background:linear-gradient(135deg,rgba(94,184,255,.14),rgba(42,111,184,.06));
+  border:1px solid rgba(94,184,255,.35);color:var(--accent);
+}
+body.light .detail-banner.daily{color:#a67227}
+body.light .detail-banner.random{color:#1b5291}
+.detail-banner-icon{font-size:18px;filter:drop-shadow(0 0 6px currentColor)}
+.detail-banner-text{flex:1;line-height:1.35}
+.detail-banner-text strong{display:block;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;letter-spacing:0;margin-bottom:2px}
+.chip{
+  padding:6px 12px;border-radius:14px;background:var(--surface);
+  border:1px solid var(--border-soft);font-size:12px;color:var(--text-dim);cursor:pointer;
+  transition:all .2s;
+}
+.chip:hover{color:var(--text);border-color:var(--accent-deep)}
+.chip.active{background:var(--accent-deep);border-color:var(--accent);color:#fff}
+
+.cards-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;
+}
+.empty-state{
+  text-align:center;padding:80px 20px;color:var(--text-muted);
+}
+.empty-state-icon{font-size:48px;margin-bottom:12px;opacity:.4}
+.empty-state-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--text-dim);margin-bottom:6px}
+
+.card{
+  background:linear-gradient(180deg,var(--surface),var(--surface-2));
+  border:1px solid var(--border-soft);border-radius:14px;overflow:hidden;
+  transition:all .25s;cursor:pointer;position:relative;
+}
+.card:hover{transform:translateY(-3px);border-color:var(--accent-deep);box-shadow:0 10px 30px -10px rgba(0,0,0,.5),0 0 0 1px var(--accent-deep)}
+
+.card-photos{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border-soft);padding:10px 10px 4px}
+.card-photo{
+  aspect-ratio:3/4;background:var(--bg-2);border-radius:6px;overflow:hidden;
+  display:grid;place-items:center;position:relative;
+}
+.card-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.card-photo-empty{font-size:24px;color:var(--text-muted);opacity:.3}
+.card-photo-label{
+  font-family:'JetBrains Mono',monospace;font-size:10px;text-align:center;padding:6px 0 2px;
+  color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;
+}
+.card-photo-labels{display:grid;grid-template-columns:1fr 1fr;padding:0 10px;gap:1px}
+
+.card-body{padding:10px 14px 14px;position:relative}
+.card-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;line-height:1.2;margin-bottom:3px;padding-right:76px}
+.card-meta{font-size:11.5px;color:var(--text-muted);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.card-meta .dot{width:3px;height:3px;border-radius:50%;background:currentColor;opacity:.5}
+.card-branch{color:var(--accent-soft);font-weight:500}
+.card-date{
+  display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;
+  border-top:1px dashed var(--border-soft);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-muted);
+  letter-spacing:.02em;
+}
+.card-date svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;flex-shrink:0;opacity:.7}
+
+.card-actions{
+  position:absolute;top:10px;right:12px;display:flex;gap:4px;z-index:3;
+}
+.icon-btn{
+  width:28px;height:28px;border-radius:7px;border:1px solid var(--border);
+  background:rgba(8,11,20,.8);color:var(--text-dim);display:grid;place-items:center;
+  cursor:pointer;transition:all .2s;backdrop-filter:blur(4px);
+  font-family:inherit;padding:0;
+}
+body.light .icon-btn{background:rgba(255,255,255,.9)}
+.icon-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;pointer-events:none}
+.icon-btn:hover{background:var(--surface-3);color:var(--text);border-color:var(--accent-deep)}
+.icon-btn.fav.active{color:var(--gold-rank);border-color:var(--gold-rank)}
+.icon-btn.fav.active svg{fill:var(--gold-rank)}
+.icon-btn.del:hover{color:var(--danger);border-color:var(--danger)}
+
+/* Modal */
+.modal-backdrop{
+  position:fixed;inset:0;background:var(--backdrop);backdrop-filter:blur(8px);
+  z-index:100;display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal-backdrop.active{display:flex;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{
+  background:linear-gradient(180deg,var(--surface-2),var(--surface));
+  border:1px solid var(--border);border-radius:16px;width:100%;max-width:720px;
+  max-height:88vh;overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 30px 80px -20px rgba(0,0,0,.8),0 0 0 1px rgba(94,184,255,.1);
+  animation:pop .25s cubic-bezier(.2,.9,.3,1.2);
+}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-header{
+  padding:18px 22px;border-bottom:1px solid var(--border-soft);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600}
+.modal-close{
+  width:30px;height:30px;border-radius:8px;background:var(--surface);border:1px solid var(--border);
+  color:var(--text-dim);cursor:pointer;display:grid;place-items:center;font-size:18px;line-height:1;
+}
+.modal-close:hover{color:var(--text);border-color:var(--danger)}
+.modal-body{padding:22px;overflow-y:auto;flex:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.modal-body::-webkit-scrollbar{width:6px}
+.modal-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+.detail-photos{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.detail-photo-wrap{text-align:center}
+.detail-photo{
+  aspect-ratio:3/4;background:var(--bg-2);border-radius:10px;overflow:hidden;
+  border:1px solid var(--border-soft);
+}
+.detail-photo img{width:100%;height:100%;object-fit:cover}
+.detail-photo-label{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent-soft);
+  letter-spacing:.15em;text-transform:uppercase;margin-top:8px;
+}
+
+.detail-table{width:100%;border-collapse:collapse;border:1px solid var(--border-soft);border-radius:10px;overflow:hidden}
+.detail-table tr{border-bottom:1px solid var(--border-soft)}
+.detail-table tr:last-child{border-bottom:none}
+.detail-table th,.detail-table td{padding:11px 14px;text-align:left;vertical-align:top;font-size:13.5px}
+.detail-table th{
+  background:var(--bg-2);color:var(--text-muted);font-weight:500;width:140px;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  font-family:'JetBrains Mono',monospace;
+}
+.detail-table td{line-height:1.6}
+.detail-works{white-space:pre-wrap}
+
+/* Log */
+.log-entry{
+  display:flex;gap:12px;padding:10px 12px;border-radius:8px;margin-bottom:6px;
+  background:var(--bg-2);border:1px solid var(--border-soft);
+}
+.log-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);min-width:120px;padding-top:2px}
+.log-msg{flex:1;font-size:13px}
+.log-type{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-right:8px;font-weight:600}
+.log-type.level{background:rgba(231,184,103,.15);color:var(--gold-rank);border:1px solid rgba(231,184,103,.3)}
+.log-type.game{background:rgba(94,184,255,.15);color:var(--accent);border:1px solid rgba(94,184,255,.3)}
+.log-type.streak{background:rgba(255,140,66,.15);color:var(--fire-2);border:1px solid rgba(255,140,66,.3)}
+.log-type.add{background:rgba(95,219,139,.15);color:var(--success);border:1px solid rgba(95,219,139,.3)}
+
+/* Game */
+.game-setup{max-width:420px;margin:40px auto;text-align:center}
+.game-title{font-family:'Cormorant Garamond',serif;font-size:36px;margin-bottom:8px;font-weight:500}
+.game-sub{color:var(--text-dim);font-size:14px;margin-bottom:28px}
+.game-setup .field{text-align:left;margin-bottom:16px}
+.checkbox-row{display:flex;align-items:center;gap:8px;padding:10px 0;justify-content:center}
+.checkbox-row input{width:16px;height:16px;accent-color:var(--accent)}
+.checkbox-row label{font-size:13px;color:var(--text-dim);cursor:pointer}
+
+.game-play{max-width:540px;margin:24px auto}
+.game-progress{display:flex;align-items:center;gap:10px;margin-bottom:18px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted)}
+.game-progress-bar{flex:1;height:4px;background:var(--surface);border-radius:2px;overflow:hidden}
+.game-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent-deep),var(--accent-soft));transition:width .4s}
+
+.game-question{text-align:center;margin-bottom:22px}
+.game-photos{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:380px;margin:0 auto 16px}
+.game-photo{
+  aspect-ratio:3/4;background:var(--bg-2);border-radius:10px;overflow:hidden;
+  border:1px solid var(--border-soft);
+}
+.game-photo img{width:100%;height:100%;object-fit:cover}
+.game-prompt{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--text-dim)}
+
+.game-options{display:grid;gap:10px}
+.game-option{
+  padding:14px 18px;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;font-size:14px;color:var(--text);cursor:pointer;text-align:left;
+  transition:all .2s;font-family:inherit;
+}
+.game-option:hover:not(.correct):not(.wrong):not(.disabled){border-color:var(--accent);background:var(--surface-2);transform:translateX(4px)}
+.game-option.correct{background:rgba(95,219,139,.12);border-color:var(--success);color:var(--success);font-weight:600}
+.game-option.wrong{background:rgba(255,107,107,.1);border-color:var(--danger);color:#ff9090}
+.game-option.disabled{cursor:default;opacity:.6}
+
+.game-result{text-align:center;padding:40px 20px;max-width:480px;margin:0 auto}
+.result-score{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:600;line-height:1;color:var(--accent-soft);text-shadow:0 0 30px rgba(94,184,255,.3);margin-bottom:8px}
+.result-pct{font-family:'JetBrains Mono',monospace;color:var(--text-muted);margin-bottom:20px}
+.result-msg{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;margin-bottom:30px;color:var(--text-dim)}
+.result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* Timeline */
+.timeline-view{padding-bottom:60px}
+.timeline-controls{
+  background:var(--surface);border:1px solid var(--border-soft);border-radius:14px;
+  padding:20px 22px;margin-bottom:24px;
+}
+.timeline-year-display{
+  font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:600;text-align:center;
+  color:var(--accent-soft);text-shadow:0 0 18px rgba(94,184,255,.2);margin-bottom:14px;letter-spacing:.02em;
+}
+.timeline-slider-wrap{position:relative;padding:0 12px}
+.timeline-slider{
+  width:100%;height:6px;background:linear-gradient(90deg,#2a1a3a,var(--bg-2) 20%,var(--bg-2) 80%,#1a2a3a);
+  border-radius:3px;appearance:none;outline:none;border:1px solid var(--border-soft);
+}
+.timeline-slider::-webkit-slider-thumb{
+  appearance:none;width:20px;height:20px;border-radius:50%;cursor:pointer;
+  background:linear-gradient(135deg,var(--accent-soft),var(--accent));
+  border:2px solid var(--text);box-shadow:0 0 15px rgba(94,184,255,.5);
+}
+.timeline-slider::-moz-range-thumb{
+  width:20px;height:20px;border-radius:50%;cursor:pointer;
+  background:linear-gradient(135deg,var(--accent-soft),var(--accent));
+  border:2px solid var(--text);box-shadow:0 0 15px rgba(94,184,255,.5);
+}
+.timeline-range-labels{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);margin-top:6px;padding:0 6px}
+.timeline-manual{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:14px}
+.timeline-manual input[type=number]{
+  width:110px;padding:8px 10px;background:var(--bg-2);border:1px solid var(--border);
+  color:var(--text);border-radius:8px;font:inherit;font-family:'JetBrains Mono',monospace;text-align:center;
+}
+.timeline-manual select{
+  padding:8px 10px;background:var(--bg-2);border:1px solid var(--border);color:var(--text);
+  border-radius:8px;font:inherit;
+}
+
+.timeline-count{text-align:center;margin-bottom:18px;color:var(--text-muted);font-size:13px}
+.timeline-count strong{color:var(--accent-soft);font-family:'JetBrains Mono',monospace}
+
+.timeline-track{
+  position:relative;padding:40px 10px;min-height:260px;
+  background:
+    linear-gradient(180deg,transparent 49.5%,var(--border-soft) 49.5%,var(--border-soft) 50.5%,transparent 50.5%);
+  border-radius:12px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;
+}
+.timeline-track::-webkit-scrollbar{height:8px}
+.timeline-track::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.timeline-items{display:flex;gap:14px;align-items:center;min-height:240px;padding:0 6px}
+.timeline-item{
+  flex-shrink:0;width:110px;text-align:center;position:relative;cursor:pointer;
+  transition:transform .2s;
+}
+.timeline-item:nth-child(odd){margin-top:-80px}
+.timeline-item:nth-child(even){margin-top:80px}
+.timeline-item:hover{transform:scale(1.08)}
+.timeline-item::after{
+  content:"";position:absolute;left:50%;width:1px;background:linear-gradient(var(--accent-deep),transparent);
+  opacity:.5;
+}
+.timeline-item:nth-child(odd)::after{top:100%;height:55px}
+.timeline-item:nth-child(even)::after{bottom:100%;height:55px}
+.timeline-item-photo{
+  width:70px;height:70px;border-radius:50%;margin:0 auto 6px;overflow:hidden;
+  border:2px solid var(--accent-deep);background:var(--bg-2);
+  box-shadow:0 0 12px rgba(94,184,255,.2);
+}
+.timeline-item-photo img{width:100%;height:100%;object-fit:cover}
+.timeline-item-name{font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:500;line-height:1.15;margin-bottom:2px}
+.timeline-item-years{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted)}
+.timeline-empty{text-align:center;padding:60px 20px;color:var(--text-muted);font-style:italic;grid-column:1/-1}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:200;
+  padding:12px 20px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);
+  color:var(--text);font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.5);
+  opacity:0;pointer-events:none;transition:all .3s;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+.toast.success{border-color:var(--success)}
+.toast.error{border-color:var(--danger)}
+
+/* Tema butonu */
+.theme-toggle{
+  width:38px;height:38px;border-radius:50%;border:1px solid var(--border-soft);
+  background:var(--surface);color:var(--text-dim);cursor:pointer;
+  display:grid;place-items:center;transition:all .3s;flex-shrink:0;
+}
+.theme-toggle:hover{color:var(--text);border-color:var(--accent);transform:rotate(15deg)}
+.theme-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+body.light .theme-toggle .moon-icon{display:none}
+body.dark .theme-toggle .sun-icon{display:none}
+
+/* Library toolbar (filtreler + sıralama) */
+.library-toolbar{
+  display:flex;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap;
+}
+.library-toolbar .filter-chips{margin-bottom:0}
+.sort-wrap{margin-left:auto;display:flex;align-items:center;gap:8px}
+.sort-wrap label{font-size:11px;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+.sort-wrap select{
+  padding:7px 28px 7px 12px;background:var(--surface);border:1px solid var(--border-soft);
+  color:var(--text);border-radius:8px;font:inherit;font-size:12.5px;cursor:pointer;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%236b7699' stroke-width='2' viewBox='0 0 24 24'><path d='m6 9 6 6 6-6'/></svg>");
+  background-repeat:no-repeat;background-position:right 8px center;
+}
+.sort-wrap select:focus{outline:none;border-color:var(--accent)}
+
+/* Onay modalı */
+.confirm-modal{max-width:400px}
+.confirm-body{padding:24px 22px 22px;text-align:center}
+.confirm-icon{
+  width:56px;height:56px;border-radius:50%;margin:0 auto 14px;
+  background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);
+  display:grid;place-items:center;font-size:26px;color:var(--danger);
+}
+body.light .confirm-icon{background:rgba(184,58,58,.08)}
+.confirm-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;margin-bottom:8px}
+.confirm-msg{color:var(--text-dim);font-size:13.5px;margin-bottom:22px;line-height:1.55}
+.confirm-msg strong{color:var(--text);font-weight:600}
+.confirm-actions{display:flex;gap:10px;justify-content:center}
+.confirm-actions .btn{min-width:110px}
+
+/* Streak açık temada biraz daha okunaklı */
+body.light .streak{background:linear-gradient(135deg,rgba(216,95,30,.14),rgba(232,133,58,.08));border-color:rgba(216,95,30,.4)}
+body.light .streak-count{color:#d85f1e;text-shadow:none}
+body.light .brand-mark{box-shadow:0 4px 12px rgba(42,111,184,.25),inset 0 1px 0 rgba(255,255,255,.3)}
+body.light .card:hover{box-shadow:0 10px 26px -10px rgba(40,50,80,.18),0 0 0 1px var(--accent-deep)}
+
+/* Boş fotoğraf glifini temaya uyumlu yap */
+.empty-glyph{width:100%;height:100%;display:grid;place-items:center;color:var(--empty-glyph);font-size:36px}
+
+/* Misc */
+.hidden{display:none !important}
+.text-center{text-align:center}
+.mt-auto{margin-top:auto}
+
+/* Small screens */
+@media (max-width:960px){
+  html,body{overflow:auto;height:auto;min-height:100vh}
+  .app{grid-template-columns:1fr;height:auto;min-height:100vh}
+  .sidebar{
+    height:auto;max-height:none;border-right:none;
+    border-bottom:1px solid var(--border-soft);
+    position:relative;
+  }
+  .sidebar-scroll{max-height:none;overflow:visible;padding:14px 18px 22px}
+  .main{height:auto;min-height:80vh}
+  .content{overflow:visible}
+  .view{overflow:visible;padding:18px 16px 40px;height:auto}
+  .view.active{display:block}
+  .topbar{
+    height:auto;min-height:56px;padding:10px 14px;gap:10px;flex-wrap:wrap;
+    position:sticky;top:0;z-index:50;
+  }
+  .tabs{order:1;width:100%;justify-content:space-between}
+  .tab{flex:1;padding:8px 10px;font-size:12.5px;text-align:center}
+  .search-wrap{order:3;max-width:none;flex:1 1 100%}
+  .spacer{display:none}
+  .theme-toggle{order:2;width:34px;height:34px}
+  .streak{order:2;padding:6px 10px 6px 8px}
+  .streak-count{font-size:15px}
+  .streak-label{font-size:9px}
+
+  /* Mobil: form başlangıçta kapalı, kullanıcı açabilsin */
+  .mobile-form-toggle{
+    display:flex;align-items:center;justify-content:space-between;
+    width:100%;padding:12px 16px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent-deep),var(--accent));
+    color:#fff;border:none;font:inherit;font-weight:600;font-size:14px;
+    cursor:pointer;margin-top:14px;box-shadow:0 4px 14px rgba(94,184,255,.3);
+  }
+  .mobile-form-toggle .chev{transition:transform .3s}
+  .mobile-form-toggle.open .chev{transform:rotate(180deg)}
+  .form-section.collapsed{display:none}
+
+  /* Kütüphane başlığı */
+  .view-header{flex-wrap:wrap;gap:8px 12px}
+  .view-title{font-size:24px}
+  .discover-actions{width:100%;margin-left:0;margin-top:4px}
+  .btn-discover{flex:1;justify-content:center;padding:9px 10px;font-size:12.5px}
+
+  /* Toolbar: sıralama alta insin */
+  .library-toolbar{gap:10px}
+  .sort-wrap{margin-left:0;width:100%}
+  .sort-wrap label{display:none}
+  .sort-wrap select{width:100%;padding:9px 32px 9px 12px}
+
+  /* Kartlar tek sütun */
+  .cards-grid{grid-template-columns:1fr;gap:14px}
+  .card-name{font-size:18px;padding-right:96px}
+
+  /* Profil kartı */
+  .profile-card{padding:14px}
+  .rank-medal{width:42px;height:42px;font-size:20px}
+  .rank-title{font-size:17px}
+
+  /* Modal mobilde fullscreen yakın */
+  .modal-backdrop{padding:0;align-items:flex-end}
+  .modal{max-width:100%;max-height:92vh;border-radius:18px 18px 0 0;width:100%}
+  .modal-body{padding:16px}
+  .detail-photos{gap:10px}
+  .detail-table th{width:110px;font-size:10px;padding:9px 10px}
+  .detail-table td{padding:9px 10px;font-size:13px}
+
+  /* Oyun mobil */
+  .game-photos{max-width:320px}
+  .game-option{padding:12px 14px;font-size:13px}
+
+  /* Zaman makinesi mobil */
+  .timeline-year-display{font-size:32px}
+  .timeline-item{width:90px}
+  .timeline-item-photo{width:58px;height:58px}
+  .timeline-manual input[type=number]{width:90px}
+
+  /* Detay banner mobilde yumuşat */
+  .detail-banner{padding:9px 11px;font-size:11.5px}
+}
+
+@media (max-width:480px){
+  .view-title{font-size:20px}
+  .view-meta{font-size:12px}
+  .tab{font-size:11.5px;padding:7px 6px}
+  .brand-title{font-size:17px}
+  .brand-sub{font-size:9px}
+  .btn-discover span:not(.bd-icon){display:inline}
+}
+.mobile-form-toggle{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">Ü</div>
+      <div>
+        <div class="brand-title">Ünlüler Kitaplığı</div>
+        <div class="brand-sub">Gece Kütüphanesi</div>
+      </div>
+    </div>
+
+    <div class="sidebar-scroll">
+      <!-- Profile Card -->
+      <div class="profile-card" id="profileCard">
+        <div class="rank-row">
+          <div class="rank-medal" id="rankMedal">B</div>
+          <div class="rank-info">
+            <div class="rank-title" id="rankTitle">Bronz Üstat</div>
+            <div class="rank-sub" id="rankSub">Yeni Başlayan</div>
+          </div>
+        </div>
+        <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+        <div class="progress-labels">
+          <span id="progressCount">0 kişi</span>
+          <span id="progressNext">→ 25</span>
+        </div>
+        <div class="log-hint">Gelişim Günlüğü için tıkla →</div>
+      </div>
+
+      <!-- Form -->
+      <button class="mobile-form-toggle" id="mobileFormToggle" type="button">
+        <span>+ Yeni Kayıt Ekle</span>
+        <span class="chev">▾</span>
+      </button>
+      <div class="form-section collapsed" id="formSection">
+        <div class="section-title" id="formTitle">Yeni Kayıt</div>
+
+        <div class="field">
+          <label>Ad Soyad</label>
+          <input type="text" id="f_name" placeholder="Örn: İbn Sînâ" maxlength="80">
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>Cinsiyet</label>
+            <select id="f_gender">
+              <option value="Erkek">Erkek</option>
+              <option value="Kadın">Kadın</option>
+              <option value="Diğer">Diğer</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Branş</label>
+            <input type="text" id="f_branch" list="branchList" placeholder="Filozof, Bilim İnsanı...">
+            <datalist id="branchList"></datalist>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Doğum Yılı</label>
+          <div class="row-3">
+            <input type="number" id="f_birth" placeholder="980" step="1">
+            <select id="f_birthEra"><option value="MS">MS</option><option value="MÖ">MÖ</option></select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Ölüm Yılı <span style="color:var(--text-muted);font-size:10px">(opsiyonel)</span></label>
+          <div class="row-3">
+            <input type="number" id="f_death" placeholder="1037" step="1">
+            <select id="f_deathEra"><option value="MS">MS</option><option value="MÖ">MÖ</option></select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Önemli Eserleri</label>
+          <textarea id="f_works" placeholder="El-Kânûn fî't-Tıb, Kitâbü'ş-Şifâ..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Kısa Özet</label>
+          <textarea id="f_summary" placeholder="Bir veya iki cümle..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Fotoğraflar (Eski Hali / Yeni Hali)</label>
+          <div class="photo-uploads">
+            <label class="photo-slot" id="slot_old">
+              <span class="ph-label">Eski Hali<br><small>yüklemek için tıkla</small></span>
+              <input type="file" accept="image/*" id="f_oldPhoto">
+            </label>
+            <label class="photo-slot" id="slot_new">
+              <span class="ph-label">Yeni Hali<br><small>yüklemek için tıkla</small></span>
+              <input type="file" accept="image/*" id="f_newPhoto">
+            </label>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="saveBtn" style="margin-top:14px">Kaydet</button>
+        <button class="btn btn-ghost btn-block hidden" id="cancelEditBtn" style="margin-top:8px">Düzenlemeyi İptal Et</button>
+
+        <div class="data-actions">
+          <button class="btn btn-sm" id="exportBtn">⬇ Dışa Aktar</button>
+          <button class="btn btn-sm" id="importBtn">⬆ İçe Aktar</button>
+          <input type="file" id="importFile" accept="application/json" style="display:none">
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="tabs">
+        <button class="tab active" data-view="library">📚 Kütüphane</button>
+        <button class="tab" data-view="game">🎮 Oyun</button>
+        <button class="tab" data-view="timeline">⏳ Zaman Makinesi</button>
+      </div>
+      <div class="search-wrap"><input type="text" id="searchInput" placeholder="Ada, branşa veya özete göre ara..."></div>
+      <div class="spacer"></div>
+      <button class="theme-toggle" id="themeToggle" title="Tema değiştir">
+        <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <div class="streak level-0" id="streakEl" title="Günlük oyun serin">
+        <div class="streak-icon">🔥</div>
+        <div>
+          <div class="streak-count" id="streakCount">0</div>
+          <div class="streak-label">gün seri</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Library -->
+      <section class="view active" id="view-library">
+        <div class="view-header">
+          <div class="view-title">Kütüphane</div>
+          <div class="view-meta" id="libraryMeta">0 kayıt</div>
+          <div class="discover-actions">
+            <button class="btn-discover daily" id="dailyBtn" title="Bugün için seçilmiş kişiyi göster">
+              <span class="bd-icon">✦</span><span>Günün Kişisi</span>
+            </button>
+            <button class="btn-discover random" id="randomBtn" title="Uzun süredir bakmadıklarından biri">
+              <span class="bd-icon">🎲</span><span>Rastgele Göster</span>
+            </button>
+          </div>
+        </div>
+        <div class="library-toolbar">
+          <div class="filter-chips" id="filterChips">
+            <button class="chip active" data-filter="all">Tümü</button>
+            <button class="chip" data-filter="fav">⭐ Favoriler</button>
+          </div>
+          <div class="sort-wrap">
+            <label for="sortSelect">Sırala</label>
+            <select id="sortSelect">
+              <option value="newest">En Yeni Eklenen</option>
+              <option value="oldest">En Eski Eklenen</option>
+              <option value="az">A → Z (Alfabetik)</option>
+              <option value="za">Z → A (Ters Alfabetik)</option>
+              <option value="oldhist">Tarihsel: En Eski Doğum</option>
+              <option value="newhist">Tarihsel: En Yeni Doğum</option>
+            </select>
+          </div>
+        </div>
+        <div id="cardsContainer"></div>
+      </section>
+
+      <!-- Game -->
+      <section class="view" id="view-game">
+        <div id="gameContent"></div>
+      </section>
+
+      <!-- Timeline -->
+      <section class="view" id="view-timeline">
+        <div class="view-header">
+          <div class="view-title">Zaman Makinesi</div>
+          <div class="view-meta">Tarihe yolculuk et</div>
+        </div>
+        <div class="timeline-controls">
+          <div class="timeline-year-display" id="tlYearDisplay">MS 1000</div>
+          <div class="timeline-slider-wrap">
+            <input type="range" class="timeline-slider" id="tlSlider" min="-3000" max="2100" value="1000" step="1">
+            <div class="timeline-range-labels">
+              <span>MÖ 3000</span><span>MÖ 1000</span><span>0</span><span>MS 1000</span><span>MS 2100</span>
+            </div>
+          </div>
+          <div class="timeline-manual">
+            <input type="number" id="tlYearInput" value="1000" min="1" max="3000">
+            <select id="tlEraInput"><option value="MS">MS</option><option value="MÖ">MÖ</option></select>
+            <button class="btn btn-sm" id="tlGoBtn">Git</button>
+          </div>
+        </div>
+        <div class="timeline-count">Seçilen tarihte <strong id="tlAliveCount">0</strong> kişi hayatta.</div>
+        <div class="timeline-track" id="timelineTrack"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- Modals -->
+<div class="modal-backdrop" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="detailTitle">Detay</div>
+      <button class="modal-close" onclick="closeModal('detailModal')">×</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="logModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Gelişim Günlüğü</div>
+      <button class="modal-close" onclick="closeModal('logModal')">×</button>
+    </div>
+    <div class="modal-body" id="logBody"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="confirmModal">
+  <div class="modal confirm-modal">
+    <div class="confirm-body">
+      <div class="confirm-icon">⚠</div>
+      <div class="confirm-title" id="confirmTitle">Silmek istediğine emin misin?</div>
+      <div class="confirm-msg" id="confirmMsg">Bu işlem geri alınamaz.</div>
+      <div class="confirm-actions">
+        <button class="btn" id="confirmCancel">İptal</button>
+        <button class="btn btn-danger" id="confirmOk">Evet, Sil</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ======================================================
+   ÜNLÜLER KİTAPLIĞI · Tek Dosya Uygulama
+   - Çökme korumalı (try/catch + defansif okumalar)
+   - localStorage tabanlı
+   - Türkçe
+====================================================== */
+
+const STORAGE_KEY = 'unluler_kitapligi_v1';
+
+/* ==================================================================
+   IndexedDB ile fotoğraf depolama
+   localStorage yalnızca ~5-10MB. Fotoğraflar IndexedDB'ye gider
+   (telefonda gigabaytlarca yer). Metadata yine localStorage'da.
+================================================================== */
+const IDB_NAME = 'unluler_photos';
+const IDB_STORE = 'photos';
+let idbInstance = null;
+let idbFailed = false;
+const photoMemCache = new Map(); // {personId: {old:base64, new:base64}}
+
+function openIDB(){
+  if(idbInstance) return Promise.resolve(idbInstance);
+  if(idbFailed) return Promise.resolve(null);
+  return new Promise((resolve)=>{
+    try {
+      if(!('indexedDB' in window)){ idbFailed=true; return resolve(null); }
+      const req = indexedDB.open(IDB_NAME, 1);
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if(!db.objectStoreNames.contains(IDB_STORE)){
+          db.createObjectStore(IDB_STORE, {keyPath:'id'});
+        }
+      };
+      req.onsuccess = e => { idbInstance = e.target.result; resolve(idbInstance); };
+      req.onerror = () => { idbFailed = true; console.warn('IndexedDB açılamadı'); resolve(null); };
+      req.onblocked = () => { idbFailed = true; resolve(null); };
+    } catch(e){ idbFailed = true; resolve(null); }
+  });
+}
+
+async function idbSetPhotos(personId, oldPhoto, newPhoto){
+  if(!personId) return false;
+  photoMemCache.set(personId, {old:oldPhoto||'', new:newPhoto||''});
+  const db = await openIDB();
+  if(!db) return false;
+  try {
+    return await new Promise((resolve)=>{
+      const tx = db.transaction(IDB_STORE,'readwrite');
+      const store = tx.objectStore(IDB_STORE);
+      store.put({id:personId, old:oldPhoto||'', new:newPhoto||'', updatedAt:Date.now()});
+      tx.oncomplete = ()=>resolve(true);
+      tx.onerror = ()=>{ console.warn('IDB yazma hatası'); resolve(false); };
+    });
+  } catch(e){ return false; }
+}
+
+async function idbGetPhotos(personId){
+  if(!personId) return {old:'',new:''};
+  if(photoMemCache.has(personId)) return photoMemCache.get(personId);
+  const db = await openIDB();
+  if(!db) return {old:'',new:''};
+  try {
+    return await new Promise((resolve)=>{
+      const tx = db.transaction(IDB_STORE,'readonly');
+      const store = tx.objectStore(IDB_STORE);
+      const req = store.get(personId);
+      req.onsuccess = () => {
+        const data = req.result ? {old:req.result.old||'',new:req.result.new||''} : {old:'',new:''};
+        photoMemCache.set(personId, data);
+        resolve(data);
+      };
+      req.onerror = ()=>resolve({old:'',new:''});
+    });
+  } catch(e){ return {old:'',new:''}; }
+}
+
+async function idbDeletePhotos(personId){
+  photoMemCache.delete(personId);
+  const db = await openIDB();
+  if(!db) return false;
+  try {
+    return await new Promise((resolve)=>{
+      const tx = db.transaction(IDB_STORE,'readwrite');
+      tx.objectStore(IDB_STORE).delete(personId);
+      tx.oncomplete = ()=>resolve(true);
+      tx.onerror = ()=>resolve(false);
+    });
+  } catch(e){ return false; }
+}
+
+async function idbGetAllPhotos(){
+  const db = await openIDB();
+  if(!db) return {};
+  try {
+    return await new Promise((resolve)=>{
+      const tx = db.transaction(IDB_STORE,'readonly');
+      const req = tx.objectStore(IDB_STORE).getAll();
+      req.onsuccess = ()=>{
+        const out = {};
+        (req.result||[]).forEach(r=>{ out[r.id]={old:r.old||'',new:r.new||''}; });
+        resolve(out);
+      };
+      req.onerror = ()=>resolve({});
+    });
+  } catch(e){ return {}; }
+}
+
+// Kalıcı depolama izni iste (tarayıcı otomatik silmesin)
+async function requestPersistentStorage(){
+  try {
+    if(navigator.storage && navigator.storage.persist){
+      await navigator.storage.persist();
+    }
+  } catch(e){}
+}
+const RANKS = [
+  {min:0,  max:25,  name:'Bronz Üstat',  sub:'Yeni Başlayan',   color:'#b97a47', letter:'B'},
+  {min:25, max:50,  name:'Gümüş Üstat',  sub:'Çıraklık Dönemi', color:'#c9d0dc', letter:'G'},
+  {min:50, max:75,  name:'Altın Üstat',  sub:'Ustalık Yolu',    color:'#e7b867', letter:'A'},
+  {min:75, max:Infinity, name:'Elmas Üstat', sub:'Efsanevi Bilge', color:'#9cdcf2', letter:'E'}
+];
+
+/* ---- Durum ---- */
+let state = {
+  people: [],
+  streak: { count:0, lastPlayDate:null },
+  lastRank: 'Bronz Üstat',
+  log: [],
+  favoritesOnlyGame: false,
+  theme: 'dark',
+  sortBy: 'newest'
+};
+let editingId = null;
+let currentFilter = 'all';
+let searchQuery = '';
+let pendingOldPhoto = '';
+let pendingNewPhoto = '';
+
+/* ---- Kalıcı Depolama ---- */
+// Metadata -> localStorage, fotoğraflar -> IndexedDB
+function saveState(){
+  try {
+    // Fotoğrafları çıkararak sakla (yer tasarrufu)
+    const lean = {
+      ...state,
+      people: state.people.map(p => {
+        const {oldPhoto, newPhoto, ...rest} = p;
+        return rest;
+      })
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(lean));
+  } catch(e){
+    console.warn('Kaydetme hatası:', e);
+    toast('Metadata kaydedilemedi','error');
+  }
+}
+async function loadState(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const parsed = JSON.parse(raw);
+    if(!parsed || typeof parsed !== 'object') return;
+    state.people = Array.isArray(parsed.people) ? parsed.people : [];
+    state.streak = parsed.streak && typeof parsed.streak==='object' ? parsed.streak : {count:0,lastPlayDate:null};
+    state.lastRank = parsed.lastRank || 'Bronz Üstat';
+    state.log = Array.isArray(parsed.log) ? parsed.log : [];
+    state.favoritesOnlyGame = !!parsed.favoritesOnlyGame;
+    state.theme = parsed.theme === 'light' ? 'light' : 'dark';
+    state.sortBy = ['newest','oldest','az','za','oldhist','newhist'].includes(parsed.sortBy) ? parsed.sortBy : 'newest';
+
+    // Önce IDB'deki tüm fotoğrafları yükle
+    const allPhotos = await idbGetAllPhotos();
+
+    // Eski verilerdeki eksik alanları düzelt
+    state.people = state.people.map(p => {
+      const id = p.id || genId();
+      const photos = allPhotos[id] || {};
+      // Eğer kayıtta hâlâ inline foto varsa (eski localStorage verisi), IDB'ye taşı
+      const oldPhoto = p.oldPhoto || photos.old || '';
+      const newPhoto = p.newPhoto || photos.new || '';
+      if((p.oldPhoto || p.newPhoto) && !photos.old && !photos.new){
+        // Geriye dönük migrasyon: inline fotoyu IDB'ye kaydet
+        idbSetPhotos(id, oldPhoto, newPhoto);
+      }
+      photoMemCache.set(id, {old:oldPhoto, new:newPhoto});
+      return {
+        id,
+        name: p.name || 'İsimsiz',
+        gender: p.gender || 'Diğer',
+        branch: p.branch || '',
+        birthYear: Number.isFinite(+p.birthYear) ? +p.birthYear : null,
+        birthEra: p.birthEra === 'MÖ' ? 'MÖ' : 'MS',
+        deathYear: Number.isFinite(+p.deathYear) ? +p.deathYear : null,
+        deathEra: p.deathEra === 'MÖ' ? 'MÖ' : 'MS',
+        works: p.works || '',
+        summary: p.summary || '',
+        oldPhoto, newPhoto,  // bellekte tut
+        favorite: !!p.favorite,
+        createdAt: p.createdAt || Date.now(),
+        lastViewedAt: Number.isFinite(+p.lastViewedAt) ? +p.lastViewedAt : null
+      };
+    });
+  } catch(e){ console.warn('Yükleme hatası:', e); }
+}
+function genId(){ return 'p_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+/* ---- Yıl Hesapları (MÖ/MS) ---- */
+// MÖ pozitif yıl → negatif sayı. MS → pozitif sayı.
+function toSignedYear(year, era){
+  if(year==null || !Number.isFinite(+year)) return null;
+  const y = Math.abs(+year);
+  return era === 'MÖ' ? -y : y;
+}
+function fromSignedYear(signed){
+  if(signed==null || !Number.isFinite(+signed)) return {year:null,era:'MS'};
+  if(signed < 0) return {year: -signed, era:'MÖ'};
+  return {year: signed, era:'MS'};
+}
+function fmtYear(year, era){
+  if(year==null || !Number.isFinite(+year)) return '—';
+  return `${era||'MS'} ${Math.abs(+year)}`;
+}
+function lifespan(p){
+  const b = fmtYear(p.birthYear, p.birthEra);
+  const d = p.deathYear!=null ? fmtYear(p.deathYear, p.deathEra) : '—';
+  return `${b} / ${d}`;
+}
+function formatCreatedAt(ts){
+  if(!ts || !Number.isFinite(+ts)) return '—';
+  try {
+    const d = new Date(+ts);
+    if(isNaN(d.getTime())) return '—';
+    const date = d.toLocaleDateString('tr-TR', { day:'numeric', month:'long', year:'numeric' });
+    const time = d.toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' });
+    return `${date} · ${time}`;
+  } catch(e){ return '—'; }
+}
+
+/* ---- Toast ---- */
+function toast(msg, type=''){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>{ el.className = 'toast'; }, 2400);
+}
+
+/* ---- Gelişim Günlüğü ---- */
+function logEvent(type, message){
+  state.log.unshift({
+    date: new Date().toISOString(),
+    type, message
+  });
+  if(state.log.length > 500) state.log.length = 500;
+}
+
+/* ---- Rank / Profil ---- */
+function currentRank(){
+  const count = state.people.length;
+  return RANKS.find(r => count >= r.min && count < r.max) || RANKS[RANKS.length-1];
+}
+function renderProfile(){
+  const rank = currentRank();
+  const count = state.people.length;
+  const medal = document.getElementById('rankMedal');
+  const card = document.getElementById('profileCard');
+  card.style.setProperty('--rank-color', rank.color);
+  medal.style.setProperty('--rank-color', rank.color);
+  medal.style.background = `radial-gradient(circle at 30% 30%,rgba(255,255,255,.35),transparent 60%),${rank.color}`;
+  medal.style.boxShadow = `0 0 20px ${rank.color},inset 0 -2px 4px rgba(0,0,0,.3)`;
+  medal.textContent = rank.letter;
+  document.getElementById('rankTitle').textContent = rank.name;
+  document.getElementById('rankSub').textContent = rank.sub;
+
+  let pct, nextLabel;
+  if(rank.max === Infinity){
+    pct = 100;
+    nextLabel = '✦ Efsane';
+  } else {
+    pct = Math.min(100, Math.max(0, ((count - rank.min)/(rank.max - rank.min))*100));
+    nextLabel = '→ ' + rank.max;
+  }
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressBar').style.background = `linear-gradient(90deg,${rank.color},#8ed0ff)`;
+  document.getElementById('progressBar').style.boxShadow = `0 0 12px ${rank.color}`;
+  document.getElementById('progressCount').textContent = count + ' kişi';
+  document.getElementById('progressNext').textContent = nextLabel;
+
+  // Seviye değişimi kontrolü
+  if(state.lastRank !== rank.name){
+    if(count > 0){ // ilk yüklemede spam yapmasın diye
+      logEvent('level', `Yeni unvan kazanıldı: ${rank.name}. Kütüphanen ${count} kişiye ulaştı.`);
+      toast(`🏅 ${rank.name} unvanını kazandın!`, 'success');
+    }
+    state.lastRank = rank.name;
+  }
+}
+
+/* ---- Streak ---- */
+function dateKey(d){
+  const x = d || new Date();
+  const y = x.getFullYear(), m = String(x.getMonth()+1).padStart(2,'0'), da = String(x.getDate()).padStart(2,'0');
+  return `${y}-${m}-${da}`;
+}
+function updateStreakOnGame(){
+  const today = dateKey();
+  const last = state.streak.lastPlayDate;
+  if(last === today){ return; }
+  if(last){
+    const diff = (new Date(today) - new Date(last)) / 86400000;
+    if(diff === 1){ state.streak.count += 1; }
+    else { state.streak.count = 1; }
+  } else {
+    state.streak.count = 1;
+  }
+  state.streak.lastPlayDate = today;
+  logEvent('streak', `Günlük oyun tamamlandı. Seri: ${state.streak.count} gün 🔥`);
+}
+function renderStreak(){
+  const el = document.getElementById('streakEl');
+  const c = state.streak.count || 0;
+  document.getElementById('streakCount').textContent = c;
+  let level = 0;
+  if(c >= 30) level = 4;
+  else if(c >= 14) level = 3;
+  else if(c >= 7) level = 2;
+  else if(c >= 1) level = 1;
+  el.className = 'streak level-' + level;
+}
+
+/* ---- Form: Fotoğraf Yükleme ---- */
+function readAsBase64(file){
+  return new Promise((resolve, reject)=>{
+    if(!file) return resolve('');
+    // Görüntüyü küçülterek sakla (localStorage'ı zorlamamak için)
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const maxDim = 480;
+          let w = img.width, h = img.height;
+          if(w > h && w > maxDim){ h = h * (maxDim/w); w = maxDim; }
+          else if(h > maxDim){ w = w * (maxDim/h); h = maxDim; }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.82));
+        } catch(err){ resolve(e.target.result); }
+      };
+      img.onerror = () => resolve(e.target.result);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('Okuma hatası'));
+    reader.readAsDataURL(file);
+  });
+}
+function setupPhotoSlot(slotId, inputId, which){
+  const slot = document.getElementById(slotId);
+  const input = document.getElementById(inputId);
+  input.addEventListener('change', async e => {
+    const file = e.target.files && e.target.files[0];
+    if(!file) return;
+    try {
+      const b64 = await readAsBase64(file);
+      if(which === 'old') pendingOldPhoto = b64;
+      else pendingNewPhoto = b64;
+      renderPhotoSlot(slotId, b64, which === 'old' ? 'Eski Hali' : 'Yeni Hali');
+    } catch(err){ toast('Fotoğraf yüklenemedi','error'); }
+  });
+}
+function renderPhotoSlot(slotId, b64, label){
+  const slot = document.getElementById(slotId);
+  if(!slot) return;
+  const existingImg = slot.querySelector('img');
+  if(existingImg) existingImg.remove();
+  slot.classList.remove('has-image');
+  if(b64){
+    const img = document.createElement('img');
+    img.src = b64;
+    slot.insertBefore(img, slot.firstChild);
+    slot.classList.add('has-image');
+    const lbl = slot.querySelector('.ph-label');
+    if(lbl) lbl.innerHTML = label;
+  } else {
+    const lbl = slot.querySelector('.ph-label');
+    if(lbl) lbl.innerHTML = label + '<br><small>yüklemek için tıkla</small>';
+  }
+}
+
+/* ---- Form Temizle/Doldur ---- */
+function resetForm(){
+  editingId = null;
+  pendingOldPhoto = ''; pendingNewPhoto = '';
+  document.getElementById('formTitle').textContent = 'Yeni Kayıt';
+  document.getElementById('saveBtn').textContent = 'Kaydet';
+  document.getElementById('cancelEditBtn').classList.add('hidden');
+  ['f_name','f_branch','f_birth','f_death','f_works','f_summary'].forEach(i=>{ const el=document.getElementById(i); if(el) el.value=''; });
+  document.getElementById('f_gender').value = 'Erkek';
+  document.getElementById('f_birthEra').value = 'MS';
+  document.getElementById('f_deathEra').value = 'MS';
+  document.getElementById('f_oldPhoto').value = '';
+  document.getElementById('f_newPhoto').value = '';
+  renderPhotoSlot('slot_old','', 'Eski Hali');
+  renderPhotoSlot('slot_new','', 'Yeni Hali');
+
+  // Mobilde formu otomatik kapat
+  if(window.matchMedia('(max-width:960px)').matches){
+    const formSection = document.getElementById('formSection');
+    const mToggle = document.getElementById('mobileFormToggle');
+    if(formSection) formSection.classList.add('collapsed');
+    if(mToggle){
+      mToggle.classList.remove('open');
+      const span = mToggle.querySelector('span:first-child');
+      if(span) span.textContent = '+ Yeni Kayıt Ekle';
+    }
+  }
+}
+function fillForm(p){
+  editingId = p.id;
+  document.getElementById('formTitle').textContent = 'Düzenle: ' + (p.name || '');
+  document.getElementById('saveBtn').textContent = 'Güncelle';
+  document.getElementById('cancelEditBtn').classList.remove('hidden');
+  document.getElementById('f_name').value = p.name || '';
+  document.getElementById('f_gender').value = p.gender || 'Erkek';
+  document.getElementById('f_branch').value = p.branch || '';
+  document.getElementById('f_birth').value = p.birthYear!=null ? Math.abs(p.birthYear) : '';
+  document.getElementById('f_birthEra').value = p.birthEra || 'MS';
+  document.getElementById('f_death').value = p.deathYear!=null ? Math.abs(p.deathYear) : '';
+  document.getElementById('f_deathEra').value = p.deathEra || 'MS';
+  document.getElementById('f_works').value = p.works || '';
+  document.getElementById('f_summary').value = p.summary || '';
+  pendingOldPhoto = p.oldPhoto || '';
+  pendingNewPhoto = p.newPhoto || '';
+  renderPhotoSlot('slot_old', pendingOldPhoto, 'Eski Hali');
+  renderPhotoSlot('slot_new', pendingNewPhoto, 'Yeni Hali');
+
+  // Mobilde formu aç
+  if(window.matchMedia('(max-width:960px)').matches){
+    const formSection = document.getElementById('formSection');
+    const mToggle = document.getElementById('mobileFormToggle');
+    if(formSection) formSection.classList.remove('collapsed');
+    if(mToggle){
+      mToggle.classList.add('open');
+      const span = mToggle.querySelector('span:first-child');
+      if(span) span.textContent = '− Formu Gizle';
+    }
+    // Forma kaydır
+    setTimeout(()=>{
+      const fs = document.getElementById('formSection');
+      if(fs) fs.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 100);
+    return; // kenar çubuğu scroll'u mobilde gerek yok
+  }
+
+  // Kenar çubuğunun form kısmına kaydır (desktop)
+  document.querySelector('.sidebar-scroll').scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ---- Kaydet ---- */
+function handleSave(){
+  const name = (document.getElementById('f_name').value || '').trim();
+  if(!name){ toast('Ad Soyad zorunlu','error'); return; }
+
+  const rec = {
+    id: editingId || genId(),
+    name,
+    gender: document.getElementById('f_gender').value || 'Diğer',
+    branch: (document.getElementById('f_branch').value || '').trim(),
+    birthYear: parseYearInput(document.getElementById('f_birth').value),
+    birthEra: document.getElementById('f_birthEra').value,
+    deathYear: parseYearInput(document.getElementById('f_death').value),
+    deathEra: document.getElementById('f_deathEra').value,
+    works: document.getElementById('f_works').value || '',
+    summary: document.getElementById('f_summary').value || '',
+    oldPhoto: pendingOldPhoto || '',
+    newPhoto: pendingNewPhoto || '',
+    favorite: false,
+    createdAt: Date.now(),
+    lastViewedAt: null
+  };
+
+  // Çakışma kontrolü: aynı isimli başka bir kayıt var mı?
+  const normalized = normalizeName(name);
+  const duplicate = state.people.find(p => p.id !== rec.id && normalizeName(p.name||'') === normalized);
+
+  if(duplicate && !editingId){
+    showConfirm({
+      title: 'Bu isimde biri zaten var',
+      message: `Kütüphanende <strong>${escapeHtml(duplicate.name)}</strong> adlı bir kayıt zaten mevcut${duplicate.branch ? ` (${escapeHtml(duplicate.branch)})` : ''}. Yine de yeni bir kayıt olarak eklemek istiyor musun?`,
+      confirmText: 'Yine de Ekle',
+      cancelText: 'Vazgeç',
+      variant: 'primary',
+      icon: 'ⓘ',
+      onConfirm: ()=>doSave(rec)
+    });
+    return;
+  }
+
+  doSave(rec);
+}
+
+function doSave(rec){
+  // Fotoğrafları IndexedDB'ye kaydet
+  idbSetPhotos(rec.id, rec.oldPhoto, rec.newPhoto);
+
+  if(editingId){
+    const idx = state.people.findIndex(p=>p.id===editingId);
+    if(idx>=0){
+      rec.favorite = state.people[idx].favorite;
+      rec.createdAt = state.people[idx].createdAt;
+      rec.lastViewedAt = state.people[idx].lastViewedAt || null;
+      state.people[idx] = rec;
+      toast('Güncellendi','success');
+    }
+  } else {
+    state.people.push(rec);
+    logEvent('add', `Kütüphaneye eklendi: ${rec.name}`);
+    toast(`${rec.name} kütüphaneye eklendi`,'success');
+  }
+  saveState();
+  renderAll();
+  resetForm();
+}
+
+function normalizeName(n){
+  // Türkçe uyumlu karşılaştırma için
+  try { return String(n||'').trim().toLocaleLowerCase('tr').replace(/\s+/g,' '); }
+  catch(e){ return String(n||'').trim().toLowerCase(); }
+}
+function parseYearInput(v){
+  if(v===''||v==null) return null;
+  const n = parseInt(v,10);
+  if(!Number.isFinite(n)) return null;
+  return Math.abs(n);
+}
+
+/* ---- Kartlar ---- */
+function renderCards(){
+  const container = document.getElementById('cardsContainer');
+  if(!container) return;
+  container.className = '';
+  const list = getFilteredPeople();
+  document.getElementById('libraryMeta').textContent = `${state.people.length} kayıt · ${list.length} görüntüleniyor`;
+
+  if(list.length === 0){
+    container.innerHTML = `<div class="empty-state">
+      <div class="empty-state-icon">📖</div>
+      <div class="empty-state-title">Henüz kimse yok</div>
+      <div>Sol taraftaki formdan ilk kaydını oluştur.</div>
+    </div>`;
+    return;
+  }
+
+  container.className = 'cards-grid';
+  container.innerHTML = '';
+  list.forEach(p => container.appendChild(buildCard(p)));
+}
+function getFilteredPeople(){
+  let list = state.people.slice();
+  if(currentFilter === 'fav') list = list.filter(p=>p.favorite);
+  if(searchQuery){
+    const q = searchQuery.toLowerCase().trim();
+    list = list.filter(p =>
+      (p.name||'').toLowerCase().includes(q) ||
+      (p.branch||'').toLowerCase().includes(q) ||
+      (p.summary||'').toLowerCase().includes(q) ||
+      (p.works||'').toLowerCase().includes(q)
+    );
+  }
+  // Sıralama
+  const trCollator = new Intl.Collator('tr', {sensitivity:'base'});
+  switch(state.sortBy){
+    case 'oldest':
+      list.sort((a,b)=>(a.createdAt||0)-(b.createdAt||0)); break;
+    case 'az':
+      list.sort((a,b)=>trCollator.compare(a.name||'', b.name||'')); break;
+    case 'za':
+      list.sort((a,b)=>trCollator.compare(b.name||'', a.name||'')); break;
+    case 'oldhist':
+      list.sort((a,b)=>{
+        const ay = toSignedYear(a.birthYear,a.birthEra);
+        const by = toSignedYear(b.birthYear,b.birthEra);
+        if(ay==null && by==null) return 0;
+        if(ay==null) return 1;
+        if(by==null) return -1;
+        return ay - by;
+      }); break;
+    case 'newhist':
+      list.sort((a,b)=>{
+        const ay = toSignedYear(a.birthYear,a.birthEra);
+        const by = toSignedYear(b.birthYear,b.birthEra);
+        if(ay==null && by==null) return 0;
+        if(ay==null) return 1;
+        if(by==null) return -1;
+        return by - ay;
+      }); break;
+    case 'newest':
+    default:
+      list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  }
+  return list;
+}
+function buildCard(p){
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.innerHTML = `
+    <div class="card-actions">
+      <button class="icon-btn fav ${p.favorite?'active':''}" title="Favori">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15 8.6 22 9.3 17 14 18.5 21 12 17.3 5.5 21 7 14 2 9.3 9 8.6"/></svg>
+      </button>
+      <button class="icon-btn edit" title="Düzenle">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      </button>
+      <button class="icon-btn del" title="Sil">
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="card-photos">
+      <div class="card-photo">${p.oldPhoto ? `<img src="${escapeAttr(p.oldPhoto)}" alt="">` : `<span class="card-photo-empty">⟁</span>`}</div>
+      <div class="card-photo">${p.newPhoto ? `<img src="${escapeAttr(p.newPhoto)}" alt="">` : `<span class="card-photo-empty">⟁</span>`}</div>
+    </div>
+    <div class="card-photo-labels">
+      <div class="card-photo-label">Eski</div>
+      <div class="card-photo-label">Yeni</div>
+    </div>
+    <div class="card-body">
+      <div class="card-name">${escapeHtml(p.name||'İsimsiz')}</div>
+      <div class="card-meta">
+        ${p.branch ? `<span class="card-branch">${escapeHtml(p.branch)}</span><span class="dot"></span>` : ''}
+        <span>${escapeHtml(p.gender||'')}</span>
+        <span class="dot"></span>
+        <span>${escapeHtml(lifespan(p))}</span>
+      </div>
+      <div class="card-date" title="Kütüphaneye eklenme tarihi">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>${escapeHtml(formatCreatedAt(p.createdAt))}</span>
+      </div>
+    </div>
+  `;
+  // Kart tıklama
+  el.addEventListener('click', (e)=>{
+    if(e.target.closest('.icon-btn')) return;
+    openDetail(p);
+  });
+  // Favori
+  el.querySelector('.fav').addEventListener('click', e=>{
+    e.stopPropagation();
+    p.favorite = !p.favorite;
+    saveState(); renderCards();
+    toast(p.favorite ? '⭐ Favorilere eklendi' : 'Favorilerden çıkarıldı');
+  });
+  // Düzenle
+  el.querySelector('.edit').addEventListener('click', e=>{
+    e.stopPropagation();
+    fillForm(p);
+  });
+  // Sil
+  el.querySelector('.del').addEventListener('click', e=>{
+    e.stopPropagation();
+    e.preventDefault();
+    requestDelete(p);
+  });
+  return el;
+}
+
+/* ---- Genel Onay Modalı ---- */
+let pendingConfirmCallback = null;
+
+function showConfirm(opts){
+  const {title='Emin misin?', message='', confirmText='Onayla', cancelText='İptal', variant='danger', icon='⚠', onConfirm=null} = opts || {};
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').innerHTML = message;
+  const okBtn = document.getElementById('confirmOk');
+  okBtn.textContent = confirmText;
+  okBtn.className = 'btn ' + (variant === 'danger' ? 'btn-danger' : 'btn-primary');
+  document.getElementById('confirmCancel').textContent = cancelText;
+  const iconEl = document.querySelector('#confirmModal .confirm-icon');
+  if(iconEl){
+    iconEl.textContent = icon;
+    iconEl.style.background = variant === 'danger' ? '' : 'rgba(94,184,255,.1)';
+    iconEl.style.borderColor = variant === 'danger' ? '' : 'rgba(94,184,255,.35)';
+    iconEl.style.color = variant === 'danger' ? '' : 'var(--accent)';
+  }
+  pendingConfirmCallback = typeof onConfirm === 'function' ? onConfirm : null;
+  openModal('confirmModal');
+}
+
+function handleConfirmOk(){
+  const cb = pendingConfirmCallback;
+  pendingConfirmCallback = null;
+  closeModal('confirmModal');
+  if(cb){ try { cb(); } catch(e){ console.warn('onay callback hatası:',e); } }
+}
+function handleConfirmCancel(){
+  pendingConfirmCallback = null;
+  closeModal('confirmModal');
+}
+
+/* ---- Silme Onayı ---- */
+function requestDelete(p){
+  showConfirm({
+    title: 'Silmek istediğine emin misin?',
+    message: `<strong>${escapeHtml(p.name || 'İsimsiz')}</strong> adlı kayıt kalıcı olarak silinecek. Bu işlem geri alınamaz.`,
+    confirmText: 'Evet, Sil',
+    variant: 'danger',
+    icon: '⚠',
+    onConfirm: ()=>{
+      const id = p.id;
+      const target = state.people.find(x=>x.id===id);
+      const name = target ? (target.name || 'İsimsiz') : '';
+      state.people = state.people.filter(x=>x.id!==id);
+      idbDeletePhotos(id);
+      if(name) logEvent('add', `Silindi: ${name}`);
+      saveState();
+      renderAll();
+      toast('Silindi');
+    }
+  });
+}
+
+/* ---- Detay Modal ---- */
+function openDetail(p, context){
+  if(!p) return;
+  // Son görüntüleme zamanını güncelle (ağırlıklı rastgele için)
+  p.lastViewedAt = Date.now();
+  saveState();
+
+  document.getElementById('detailTitle').textContent = p.name || 'Detay';
+  const oldImg = p.oldPhoto ? `<img src="${escapeAttr(p.oldPhoto)}" alt="">` : `<div class="empty-glyph" style="font-size:42px">⟁</div>`;
+  const newImg = p.newPhoto ? `<img src="${escapeAttr(p.newPhoto)}" alt="">` : `<div class="empty-glyph" style="font-size:42px">⟁</div>`;
+
+  let banner = '';
+  if(context === 'daily'){
+    banner = `<div class="detail-banner daily">
+      <div class="detail-banner-icon">✦</div>
+      <div class="detail-banner-text"><strong>Günün Kişisi</strong>Bugün için kütüphaneden seçildi. Yarın farklı biri olacak.</div>
+    </div>`;
+  } else if(context === 'random'){
+    const daysSince = p._daysSinceLastView;
+    const sub = daysSince != null
+      ? (daysSince < 1 ? 'Az önce baktığın biri' : `Son ${Math.floor(daysSince)} gündür bakmamışsın`)
+      : 'Uzun süredir unutulmuşlardan';
+    banner = `<div class="detail-banner random">
+      <div class="detail-banner-icon">🎲</div>
+      <div class="detail-banner-text"><strong>Rastgele Seçim</strong>${escapeHtml(sub)}.</div>
+    </div>`;
+  }
+
+  document.getElementById('detailBody').innerHTML = `
+    ${banner}
+    <div class="detail-photos">
+      <div class="detail-photo-wrap">
+        <div class="detail-photo">${oldImg}</div>
+        <div class="detail-photo-label">Eski Hali</div>
+      </div>
+      <div class="detail-photo-wrap">
+        <div class="detail-photo">${newImg}</div>
+        <div class="detail-photo-label">Yeni Hali</div>
+      </div>
+    </div>
+    <table class="detail-table">
+      <tr><th>Ad Soyad</th><td>${escapeHtml(p.name||'—')}</td></tr>
+      <tr><th>Cinsiyet</th><td>${escapeHtml(p.gender||'—')}</td></tr>
+      <tr><th>Branş</th><td>${escapeHtml(p.branch||'—')}</td></tr>
+      <tr><th>Doğum</th><td>${escapeHtml(fmtYear(p.birthYear,p.birthEra))}</td></tr>
+      <tr><th>Ölüm</th><td>${escapeHtml(p.deathYear!=null ? fmtYear(p.deathYear,p.deathEra) : '—')}</td></tr>
+      <tr><th>Önemli Eserleri</th><td class="detail-works">${escapeHtml(p.works||'—')}</td></tr>
+      <tr><th>Kısa Özet</th><td>${escapeHtml(p.summary||'—')}</td></tr>
+      <tr><th>Favori</th><td>${p.favorite ? '⭐ Evet' : '—'}</td></tr>
+      <tr><th>Eklenme Tarihi</th><td>${escapeHtml(formatCreatedAt(p.createdAt))}</td></tr>
+    </table>
+  `;
+  openModal('detailModal');
+}
+
+/* ---- Keşif: Günün Kişisi & Rastgele ---- */
+function openDailyPerson(){
+  if(!state.people.length){ toast('Önce kütüphaneye birkaç kişi ekle','error'); return; }
+  const today = dateKey();
+  let seed = 0;
+  for(let i=0;i<today.length;i++){ seed = ((seed << 5) - seed + today.charCodeAt(i)) | 0; }
+  // Sabit sıralama için id'ye göre sırala, sonra seed ile index al
+  const sorted = state.people.slice().sort((a,b)=> String(a.id).localeCompare(String(b.id)));
+  const person = sorted[Math.abs(seed) % sorted.length];
+  openDetail(person, 'daily');
+}
+
+function openRandomPerson(){
+  if(!state.people.length){ toast('Önce kütüphaneye birkaç kişi ekle','error'); return; }
+  const now = Date.now();
+  // Ağırlık: son bakıştan beri geçen zamana göre (hiç bakılmamışsa createdAt'tan)
+  const weights = state.people.map(p => {
+    const ref = p.lastViewedAt || p.createdAt || now;
+    const hours = Math.max(1, (now - ref) / 3600000);
+    return Math.sqrt(hours); // ezici bias olmasın diye yumuşatma
+  });
+  const total = weights.reduce((a,b)=>a+b, 0);
+  let person;
+  if(total <= 0){
+    person = state.people[Math.floor(Math.random() * state.people.length)];
+  } else {
+    let r = Math.random() * total;
+    person = state.people[state.people.length-1];
+    for(let i=0;i<state.people.length;i++){
+      r -= weights[i];
+      if(r <= 0){ person = state.people[i]; break; }
+    }
+  }
+  // Kaç gündür bakılmadığını kenara not edelim
+  const ref = person.lastViewedAt || person.createdAt || now;
+  person._daysSinceLastView = (now - ref) / 86400000;
+  openDetail(person, 'random');
+}
+function openModal(id){ document.getElementById(id).classList.add('active'); }
+function closeModal(id){ document.getElementById(id).classList.remove('active'); }
+
+/* ---- Gelişim Günlüğü Modal ---- */
+function openLog(){
+  const body = document.getElementById('logBody');
+  if(!state.log.length){
+    body.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📜</div><div class="empty-state-title">Günlük boş</div><div>Kayıtlar eklemeye ve oyun oynamaya başladıkça burada bir zaman çizelgesi oluşacak.</div></div>';
+  } else {
+    body.innerHTML = state.log.map(e=>{
+      const d = new Date(e.date);
+      const ds = isNaN(d) ? '—' : d.toLocaleString('tr-TR',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      const typeLabel = {level:'Unvan',game:'Oyun',streak:'Seri',add:'Yeni'}[e.type] || 'Kayıt';
+      return `<div class="log-entry">
+        <div class="log-date">${escapeHtml(ds)}</div>
+        <div class="log-msg"><span class="log-type ${e.type}">${typeLabel}</span>${escapeHtml(e.message)}</div>
+      </div>`;
+    }).join('');
+  }
+  openModal('logModal');
+}
+
+/* ---- Dışa / İçe Aktarma ---- */
+function exportData(){
+  try {
+    // People içindeki fotoğraflar zaten bellek içinde (state.people), export'ta da gitsin
+    const full = {
+      ...state,
+      people: state.people.map(p => ({...p}))
+    };
+    const blob = new Blob([JSON.stringify(full, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `unluler_${dateKey()}.json`;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    toast('Dışa aktarıldı','success');
+  } catch(e){ toast('Dışa aktarma hatası','error'); }
+}
+function importData(file){
+  if(!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if(!parsed || typeof parsed !== 'object') throw new Error('Bozuk JSON');
+      // Hem state objesi hem direkt people dizisi kabul et
+      if(Array.isArray(parsed)) {
+        state.people = parsed.concat(state.people);
+      } else {
+        if(Array.isArray(parsed.people)) state.people = parsed.people.concat(state.people);
+        if(parsed.streak) state.streak = parsed.streak;
+        if(Array.isArray(parsed.log)) state.log = parsed.log.concat(state.log);
+      }
+      // ID çakışmalarını ve alan eksikliklerini düzelt
+      const seen = new Set();
+      state.people = state.people.map(p => {
+        const np = {
+          id: p.id && !seen.has(p.id) ? p.id : genId(),
+          name: p.name || 'İsimsiz',
+          gender: p.gender || 'Diğer',
+          branch: p.branch || '',
+          birthYear: Number.isFinite(+p.birthYear) ? +p.birthYear : null,
+          birthEra: p.birthEra === 'MÖ' ? 'MÖ' : 'MS',
+          deathYear: Number.isFinite(+p.deathYear) ? +p.deathYear : null,
+          deathEra: p.deathEra === 'MÖ' ? 'MÖ' : 'MS',
+          works: p.works || '',
+          summary: p.summary || '',
+          oldPhoto: p.oldPhoto || '',
+          newPhoto: p.newPhoto || '',
+          favorite: !!p.favorite,
+          createdAt: p.createdAt || Date.now(),
+          lastViewedAt: Number.isFinite(+p.lastViewedAt) ? +p.lastViewedAt : null
+        };
+        seen.add(np.id);
+        // Fotoğrafları IndexedDB'ye de yaz
+        if(np.oldPhoto || np.newPhoto){
+          idbSetPhotos(np.id, np.oldPhoto, np.newPhoto);
+        }
+        return np;
+      });
+      saveState();
+      renderAll();
+      toast('İçe aktarıldı','success');
+    } catch(err){ toast('İçe aktarma hatası: ' + err.message, 'error'); }
+  };
+  r.readAsText(file);
+}
+
+/* ---- Görünüm Değiştir ---- */
+function switchView(v){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.view===v));
+  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active', x.id==='view-'+v));
+  if(v === 'game') renderGameSetup();
+  if(v === 'timeline') renderTimeline();
+}
+
+/* ================================================================
+   OYUN MODU
+================================================================ */
+let game = null;
+
+function renderGameSetup(){
+  const pool = state.favoritesOnlyGame ? state.people.filter(p=>p.favorite && hasAtLeastOnePhoto(p)) : state.people.filter(hasAtLeastOnePhoto);
+  const total = pool.length;
+  const cont = document.getElementById('gameContent');
+
+  if(total < 2){
+    cont.innerHTML = `
+      <div class="game-setup">
+        <div class="game-title">Oyun Hazır Değil</div>
+        <div class="game-sub">Oyun için en az 2 fotoğraflı kayıt gerekli.<br>
+        ${state.favoritesOnlyGame ? 'Favori filtresi açık. ' : ''}Şu an ${total} uygun kayıt var.</div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="favOnlyCheck" ${state.favoritesOnlyGame?'checked':''}>
+          <label for="favOnlyCheck">Sadece favorilerle oyna</label>
+        </div>
+      </div>`;
+    document.getElementById('favOnlyCheck').addEventListener('change', e=>{
+      state.favoritesOnlyGame = e.target.checked; saveState(); renderGameSetup();
+    });
+    return;
+  }
+
+  cont.innerHTML = `
+    <div class="game-setup">
+      <div class="game-title">Kart Oyunu</div>
+      <div class="game-sub">${total} kişi arasından sana ünlüleri gösterelim. Doğru ismi bul.</div>
+      <div class="field">
+        <label>Soru Sayısı</label>
+        <input type="number" id="qCount" min="3" max="${total}" value="${Math.min(10,total)}">
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="favOnlyCheck" ${state.favoritesOnlyGame?'checked':''}>
+        <label for="favOnlyCheck">Sadece favorilerle oyna</label>
+      </div>
+      <button class="btn btn-primary btn-block" id="startGameBtn" style="margin-top:14px">Oyunu Başlat ▶</button>
+    </div>`;
+  document.getElementById('favOnlyCheck').addEventListener('change', e=>{
+    state.favoritesOnlyGame = e.target.checked; saveState(); renderGameSetup();
+  });
+  document.getElementById('startGameBtn').addEventListener('click', ()=>{
+    const n = parseInt(document.getElementById('qCount').value,10)||1;
+    startGame(Math.max(1, Math.min(total, n)), pool);
+  });
+}
+function hasAtLeastOnePhoto(p){ return !!(p && (p.oldPhoto || p.newPhoto)); }
+
+function startGame(questionCount, pool, predefinedTargets){
+  // Benzersiz hedefler seç
+  const shuffled = shuffleArr(pool.slice());
+  const targets = (predefinedTargets && predefinedTargets.length) ? predefinedTargets.slice(0, questionCount) : shuffled.slice(0, questionCount);
+  game = {
+    pool,
+    targets,
+    currentIdx: 0,
+    correct: 0,
+    wrong: [],
+    answered: false
+  };
+  renderGameQuestion();
+}
+function shuffleArr(a){
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function pickDistractors(target, pool){
+  // Kendisi hariç; aynı branş + aynı cinsiyet > aynı branş > aynı cinsiyet > diğer
+  const others = pool.filter(p=>p.id !== target.id);
+  const tier1 = others.filter(p => p.branch && p.branch === target.branch && p.gender === target.gender);
+  const tier2 = others.filter(p => p.branch && p.branch === target.branch && p.gender !== target.gender);
+  const tier3 = others.filter(p => p.gender === target.gender && (!p.branch || p.branch !== target.branch));
+  const tier4 = others.filter(p => !tier1.includes(p) && !tier2.includes(p) && !tier3.includes(p));
+  const picks = [];
+  const used = new Set();
+  function drawFrom(arr){
+    const a = shuffleArr(arr.slice());
+    for(const x of a){
+      if(used.has(x.id)) continue;
+      picks.push(x); used.add(x.id);
+      if(picks.length >= 4) return true;
+    }
+    return false;
+  }
+  drawFrom(tier1) || drawFrom(tier2) || drawFrom(tier3) || drawFrom(tier4);
+  if(picks.length < 4) drawFrom(tier2);
+  if(picks.length < 4) drawFrom(tier3);
+  if(picks.length < 4) drawFrom(tier4);
+  return picks.slice(0,4);
+}
+function renderGameQuestion(){
+  const cont = document.getElementById('gameContent');
+  if(!game) return;
+  if(game.currentIdx >= game.targets.length){ renderGameResult(); return; }
+  const target = game.targets[game.currentIdx];
+  const distractors = pickDistractors(target, game.pool);
+  const options = shuffleArr([target, ...distractors]);
+  const pct = Math.round((game.currentIdx / game.targets.length)*100);
+
+  cont.innerHTML = `
+    <div class="game-play">
+      <div class="game-progress">
+        <span>${game.currentIdx+1} / ${game.targets.length}</span>
+        <div class="game-progress-bar"><div class="game-progress-fill" style="width:${pct}%"></div></div>
+        <span>✓ ${game.correct}</span>
+      </div>
+      <div class="game-question">
+        <div class="game-photos">
+          <div class="game-photo">${target.oldPhoto ? `<img src="${escapeAttr(target.oldPhoto)}">` : `<div class="empty-glyph">⟁</div>`}</div>
+          <div class="game-photo">${target.newPhoto ? `<img src="${escapeAttr(target.newPhoto)}">` : `<div class="empty-glyph">⟁</div>`}</div>
+        </div>
+        <div class="game-prompt">Bu kimdir?</div>
+      </div>
+      <div class="game-options" id="gameOptions">
+        ${options.map(o=>`<button class="game-option" data-id="${escapeAttr(o.id)}">${escapeHtml(o.name||'—')}</button>`).join('')}
+      </div>
+    </div>`;
+  game.answered = false;
+  document.querySelectorAll('#gameOptions .game-option').forEach(btn=>{
+    btn.addEventListener('click', ()=>handleAnswer(btn, target));
+  });
+}
+function handleAnswer(btn, target){
+  if(game.answered) return;
+  game.answered = true;
+  const chosenId = btn.dataset.id;
+  const isCorrect = chosenId === target.id;
+  document.querySelectorAll('#gameOptions .game-option').forEach(b=>{
+    b.classList.add('disabled');
+    if(b.dataset.id === target.id) b.classList.add('correct');
+    if(b === btn && !isCorrect) b.classList.add('wrong');
+  });
+  if(isCorrect) game.correct++;
+  else game.wrong.push(target);
+
+  setTimeout(()=>{
+    game.currentIdx++;
+    renderGameQuestion();
+  }, 1100);
+}
+function renderGameResult(){
+  const total = game.targets.length;
+  const pct = total ? Math.round((game.correct/total)*100) : 0;
+  let msg;
+  if(pct === 100) msg = 'Kusursuz! Üstatlık seviyesinde.';
+  else if(pct >= 80) msg = 'Çok iyi. Bilgeliğe yaklaşıyorsun.';
+  else if(pct >= 50) msg = 'Güzel. Biraz daha çalışmayla zirvedesin.';
+  else msg = 'Yolun başı. Bilemediklerini tekrar çalışmalısın.';
+
+  // Streak güncelle + log
+  updateStreakOnGame();
+  logEvent('game', `Oyun bitti: ${game.correct}/${total} (%${pct}) doğru.`);
+  saveState();
+  renderStreak();
+
+  const cont = document.getElementById('gameContent');
+  const hasWrong = game.wrong.length > 0;
+  cont.innerHTML = `
+    <div class="game-result">
+      <div class="result-score">${game.correct}/${total}</div>
+      <div class="result-pct">%${pct} başarı</div>
+      <div class="result-msg">${escapeHtml(msg)}</div>
+      <div class="result-actions">
+        <button class="btn" id="newGameBtn">Yeni Oyun</button>
+        <button class="btn btn-primary ${hasWrong?'':'hidden'}" id="retryWrongBtn">Bilemediklerime Tekrar Çalış (${game.wrong.length})</button>
+      </div>
+    </div>`;
+  document.getElementById('newGameBtn').addEventListener('click', renderGameSetup);
+  if(hasWrong){
+    document.getElementById('retryWrongBtn').addEventListener('click', ()=>{
+      const wrongList = game.wrong.slice();
+      startGame(wrongList.length, game.pool, wrongList);
+    });
+  }
+}
+
+/* ================================================================
+   ZAMAN MAKİNESİ (TIMELINE)
+================================================================ */
+function currentTlSignedYear(){
+  return parseInt(document.getElementById('tlSlider').value,10);
+}
+function updateTlDisplayFromSigned(signed){
+  const {year, era} = fromSignedYear(signed);
+  document.getElementById('tlYearDisplay').textContent = `${era} ${year}`;
+  document.getElementById('tlYearInput').value = Math.abs(year);
+  document.getElementById('tlEraInput').value = era;
+}
+function renderTimeline(){
+  const signed = currentTlSignedYear();
+  updateTlDisplayFromSigned(signed);
+  const alive = state.people.filter(p => isAliveAt(p, signed));
+  alive.sort((a,b)=> (toSignedYear(a.birthYear,a.birthEra)||0) - (toSignedYear(b.birthYear,b.birthEra)||0));
+  document.getElementById('tlAliveCount').textContent = alive.length;
+  const track = document.getElementById('timelineTrack');
+  if(alive.length === 0){
+    track.innerHTML = '<div class="timeline-items"><div class="timeline-empty">Bu tarihte hayatta olan kimse yok. Başka bir yıl dene.</div></div>';
+    return;
+  }
+  const items = alive.map(p => {
+    const img = p.newPhoto || p.oldPhoto;
+    const years = `${fmtYear(p.birthYear,p.birthEra)} – ${p.deathYear!=null?fmtYear(p.deathYear,p.deathEra):'…'}`;
+    return `<div class="timeline-item" data-id="${escapeAttr(p.id)}">
+      <div class="timeline-item-photo">${img?`<img src="${escapeAttr(img)}">`:`<div class="empty-glyph" style="font-size:22px">⟁</div>`}</div>
+      <div class="timeline-item-name">${escapeHtml(p.name||'—')}</div>
+      <div class="timeline-item-years">${escapeHtml(years)}</div>
+    </div>`;
+  }).join('');
+  track.innerHTML = `<div class="timeline-items">${items}</div>`;
+  track.querySelectorAll('.timeline-item').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const p = state.people.find(x=>x.id===el.dataset.id);
+      if(p) openDetail(p);
+    });
+  });
+}
+function isAliveAt(p, signedYear){
+  const b = toSignedYear(p.birthYear, p.birthEra);
+  if(b==null) return false;
+  const d = p.deathYear!=null ? toSignedYear(p.deathYear, p.deathEra) : null;
+  if(d==null){
+    // Ölüm yılı yoksa: doğum yılından itibaren 100 yıl içindeyse canlı kabul et
+    return signedYear >= b && signedYear <= b + 100;
+  }
+  return signedYear >= b && signedYear <= d;
+}
+
+/* ---- Branş Datalist ---- */
+function refreshBranchList(){
+  const dl = document.getElementById('branchList');
+  const set = new Set();
+  state.people.forEach(p => { if(p.branch) set.add(p.branch); });
+  dl.innerHTML = [...set].map(b=>`<option value="${escapeAttr(b)}">`).join('');
+}
+
+/* ---- Yardımcı Escape ---- */
+function escapeHtml(s){
+  if(s==null) return '';
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escapeAttr(s){ return escapeHtml(s); }
+
+/* ---- Tema ---- */
+function applyTheme(){
+  document.body.classList.remove('dark','light');
+  document.body.classList.add(state.theme === 'light' ? 'light' : 'dark');
+}
+function toggleTheme(){
+  state.theme = state.theme === 'light' ? 'dark' : 'light';
+  applyTheme();
+  saveState();
+  toast(state.theme === 'light' ? '☀ Gündüz modu' : '🌙 Gece modu');
+}
+
+/* ---- Render Hepsi ---- */
+function renderAll(){
+  renderProfile();
+  renderStreak();
+  renderCards();
+  refreshBranchList();
+  saveState();
+}
+
+/* ================================================================
+   OLAYLAR & BAŞLATMA
+================================================================ */
+async function init(){
+  await loadState();
+  applyTheme();
+  requestPersistentStorage();
+  renderAll();
+
+  // Mobil form toggle
+  const mToggle = document.getElementById('mobileFormToggle');
+  const formSection = document.getElementById('formSection');
+  if(mToggle){
+    mToggle.addEventListener('click', ()=>{
+      const isOpen = !formSection.classList.contains('collapsed');
+      if(isOpen){
+        formSection.classList.add('collapsed');
+        mToggle.classList.remove('open');
+        mToggle.querySelector('span:first-child').textContent = '+ Yeni Kayıt Ekle';
+      } else {
+        formSection.classList.remove('collapsed');
+        mToggle.classList.add('open');
+        mToggle.querySelector('span:first-child').textContent = '− Formu Gizle';
+      }
+    });
+  }
+
+  // Tema butonu
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+  // Sıralama menüsü
+  const sortSelect = document.getElementById('sortSelect');
+  sortSelect.value = state.sortBy;
+  sortSelect.addEventListener('change', e=>{
+    state.sortBy = e.target.value;
+    saveState();
+    renderCards();
+  });
+
+  // Onay modalı butonları
+  document.getElementById('confirmOk').addEventListener('click', handleConfirmOk);
+  document.getElementById('confirmCancel').addEventListener('click', handleConfirmCancel);
+
+  // Keşif butonları
+  document.getElementById('dailyBtn').addEventListener('click', openDailyPerson);
+  document.getElementById('randomBtn').addEventListener('click', openRandomPerson);
+
+  // Sekmeler
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click', ()=>switchView(t.dataset.view));
+  });
+
+  // Filtre çipleri
+  document.querySelectorAll('#filterChips .chip').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      document.querySelectorAll('#filterChips .chip').forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+      currentFilter = c.dataset.filter;
+      renderCards();
+    });
+  });
+
+  // Arama
+  document.getElementById('searchInput').addEventListener('input', e=>{
+    searchQuery = e.target.value || '';
+    renderCards();
+  });
+
+  // Fotoğraf slotları
+  setupPhotoSlot('slot_old','f_oldPhoto','old');
+  setupPhotoSlot('slot_new','f_newPhoto','new');
+
+  // Kaydet / İptal
+  document.getElementById('saveBtn').addEventListener('click', handleSave);
+  document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+  // Dışa/İçe Aktar
+  document.getElementById('exportBtn').addEventListener('click', exportData);
+  document.getElementById('importBtn').addEventListener('click', ()=>document.getElementById('importFile').click());
+  document.getElementById('importFile').addEventListener('change', e=>{
+    const f = e.target.files && e.target.files[0];
+    if(f) importData(f);
+    e.target.value = '';
+  });
+
+  // Profil kartı → log
+  document.getElementById('profileCard').addEventListener('click', openLog);
+
+  // Timeline olayları — sürgüyü sürüklerken anlık güncelle (rAF ile throttled)
+  const tlSlider = document.getElementById('tlSlider');
+  let tlRaf = null;
+  tlSlider.addEventListener('input', ()=>{
+    updateTlDisplayFromSigned(currentTlSignedYear());
+    if(tlRaf) return;
+    tlRaf = requestAnimationFrame(()=>{
+      tlRaf = null;
+      renderTimeline();
+    });
+  });
+  tlSlider.addEventListener('change', renderTimeline);
+  document.getElementById('tlGoBtn').addEventListener('click', ()=>{
+    const y = parseInt(document.getElementById('tlYearInput').value,10);
+    const era = document.getElementById('tlEraInput').value;
+    if(!Number.isFinite(y)) return;
+    const signed = toSignedYear(y, era);
+    const bounded = Math.max(-3000, Math.min(2100, signed));
+    document.getElementById('tlSlider').value = bounded;
+    renderTimeline();
+  });
+  document.getElementById('tlYearInput').addEventListener('keydown', e=>{
+    if(e.key === 'Enter') document.getElementById('tlGoBtn').click();
+  });
+
+  // Modal arkaplanına tıklama
+  document.querySelectorAll('.modal-backdrop').forEach(m=>{
+    m.addEventListener('click', e=>{ if(e.target === m) m.classList.remove('active'); });
+  });
+  // ESC ile kapat
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape') document.querySelectorAll('.modal-backdrop.active').forEach(m=>m.classList.remove('active'));
+  });
+
+  resetForm();
+}
+
+// Başlat (güvenli)
+try {
+  document.addEventListener('DOMContentLoaded', init);
+  if(document.readyState !== 'loading') init();
+} catch(e){ console.error('Başlatma hatası:', e); }
+</script>
+</body>
+</html>
